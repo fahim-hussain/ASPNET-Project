@@ -1,0 +1,145 @@
+﻿@model S2021A6FH.Models.ArtistWithMediaInfoViewModel
+
+@{
+    ViewBag.Title = "Details";
+    var user = new S2021A6FH.Controllers.RequestUser(User as System.Security.Claims.ClaimsPrincipal);
+}
+
+<h2>Artist details - @Model.Name</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+            <hr />
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BirthName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BirthName)
+            <hr />
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BirthOrStartDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BirthOrStartDate)
+            <hr />
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UrlArtist)
+        </dt>
+
+        <dd>
+            <img src="@Model.UrlArtist" width="150" />
+            <hr />
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Genre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Genre)
+            <hr />
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Biography)
+        </dt>
+
+        <dd class="well">
+            @Html.Raw(Model.Biography)
+            <hr />
+        </dd>
+
+        @if (Model.MediaItems.Count() != 0)
+        {
+            <dt>
+                Photos
+            </dt>
+            <dd>
+                @foreach (var item in Model.MediaItems.Where(x => x.ContentType.Contains("image/")))
+                {
+                    <div>
+                        <span>@item.Caption</span>
+                        <br />
+                        <img src="~/artistmedia/@item.StringId" width="150" />
+                    </div>
+
+                }
+                <hr />
+            </dd>
+
+            <dt>
+                Audio
+            </dt>
+            <dd>
+                @foreach (var item in Model.MediaItems.Where(x => x.ContentType.Contains("audio/")))
+                {
+                    <div>
+                        <span>@item.Caption</span>
+                        <br />
+                        <audio src="~/artistmedia/@item.StringId" controls="controls"> </audio>
+                    </div>
+
+                }
+                <hr />
+            </dd>
+
+            <dt>
+                Documents
+            </dt>
+
+            <dd>
+                @foreach (var item in Model.MediaItems.Where(m => m.ContentType.Contains("application/")))
+                {
+                    <div>
+                        <span>@item.Caption</span>
+                        <br />
+                        @if (item.ContentType.Contains("pdf"))
+                        {
+                            <a href="~/artistmedia/@item.StringId/download"><img src="~/Assets/Icons/icon-pdf.png" /></a>
+                        }
+                        else if (item.ContentType.Contains("word"))
+                        {
+                            <a href="~/artistmedia/@item.StringId/download"><img src="~/Assets/Icons/icon-word.png" /></a>
+                        }
+                        else if (item.ContentType.Contains("ms-excel") || item.ContentType.Contains("spreadsheet"))
+                        {
+                            <a href="~/artistmedia/@item.StringId/download"><img src="~/Assets/Icons/icon-excel.png" /></a>
+                        }
+                    </div>
+                }
+                <hr />
+            </dd>
+        }
+
+    </dl>
+</div>
+<p>
+    @if (user.HasRoleClaim("Coordinator"))
+    {
+        @Html.ActionLink("Add Album", "addalbum", new { id = Model.Id })
+        @Html.Raw("|\n")
+    }
+
+    @if (user.HasRoleClaim("Executive"))
+    {
+        @Html.ActionLink("Add Media", "ArtistAddMedia", new { id = Model.Id })
+        @Html.Raw("|\n")
+    }
+
+    @Html.ActionLink("Back to List", "Index")
+</p>
