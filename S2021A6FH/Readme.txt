@@ -1,7 +1,6 @@
 ﻿
-BEFORE running this app for the first time...
-
-Add your own design model classes in the EntityModels Folder.
-
-Then, add DbSet<TEntity> properties in the 
-IdentityModels.cs source code file.
+ ASPNET Project
+ 
+ Creating a database where users can add albums, artists and tracks along side their album cover.
+ 
+ This project uses ASP.net core
